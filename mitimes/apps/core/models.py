@@ -52,12 +52,30 @@ class Activity(models.Model):
         return "%s: %s (%s)" % (self.type, self.code, self.matter)
 
     def save(self, *args, **kwargs):
+        """
+        Overrides 'is_on_current_timesheet' to be False if 'timesheet' is set.
+        """
         self.is_on_current_timesheet = False if self.timesheet else True
         models.Model.save(self, *args, **kwargs)
 
     @staticmethod
     def get_on_current_timesheet(profile):
-        return Activity.objects.filter(profile=profile, is_on_timesheet=True)
+        """
+        Returns all activities on current timesheet,
+        not posted for current profile.
+        """
+        return Activity.objects.filter(profile=profile,
+                                       is_on_current_timesheet=True)
+
+    @staticmethod
+    def remove_all(profile):
+        """
+        Removes all activities not on current timesheet,
+        not posted for current profile.
+        """
+        to_delete = Activity.objects.filter(profile=profile,
+                                            is_on_current_timesheet=False,
+                                            timesheet_isnull=True,)
 
 class Timesheet(models.Model):
     date_posted = models.DateTimeField(auto_now=True,)
@@ -67,4 +85,7 @@ class Timesheet(models.Model):
         return str(self.date_posted)
 
     def get_not_emailed(self):
+        """
+        Returns all posted timesheets.
+        """
         return self.objects.filter(is_emailed=False)

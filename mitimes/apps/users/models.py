@@ -14,8 +14,12 @@ class ChargeRate(models.Model):
     def __unicode__(self):
         return "%s, $%s per hour" % (self.description, self.per_hour)
 
-    def get_rate_per_unit(self):
-        return 
+    @staticmethod
+    def get_rate_per_unit():
+        """
+        Returns rate per one unit according to global units per hour setting.
+        """
+        pass
 
 class Client(models.Model):
     first_name = models.CharField(max_length=50,)
@@ -55,10 +59,16 @@ class Contact(models.Model):
     
     @staticmethod
     def get_active(profile):
+        """
+        Returns all active contacts for profile.
+        """
         return Contact.objects.filter(profile=profile, is_active=True,)
     
     @staticmethod
     def get_inactive(profile):
+        """
+        Returns all inactive contacts for profile.
+        """
         return Contact.objects.filter(profile=profile, is_active=False,)
 
 TIME_ZONES = (

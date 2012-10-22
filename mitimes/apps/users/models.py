@@ -25,12 +25,14 @@ class Client(models.Model):
         return "%s %s" % (self.first_name, self.last_name)
 
 class ContactPhone(models.Model):
+    contact = models.ForeignKey("Contact",)
     phone = models.CharField(max_length=20,)
 
     def __unicode__(self):
         return self.phone
 
 class ContactEmail(models.Model):
+    contact = models.ForeignKey("Contact",)
     email = models.EmailField(max_length=300,)
 
     def __unicode__(self):
@@ -42,8 +44,6 @@ class Contact(models.Model):
     default_name = models.CharField(max_length=200,)
     first_name = models.CharField(max_length=50, blank=True,)
     last_name = models.CharField(max_length=50, blank=True,)
-    phones = models.ForeignKey(ContactPhone, blank=True,)
-    email = models.ForeignKey(ContactEmail, blank=True,)
     
     def __unicode__(self):
         if self.first_name or self.last_name:

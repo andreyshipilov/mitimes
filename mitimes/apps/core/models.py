@@ -79,14 +79,16 @@ class Activity(models.Model):
                         .update(is_active=False,)
 
 class Timesheet(models.Model):
+    profile = models.ForeignKey(Profile,)
     date_posted = models.DateTimeField(auto_now=True,)
     is_emailed = models.BooleanField(default=False,)
 
     def __unicode__(self):
         return str(self.date_posted)
 
-    def get_not_emailed(self):
+    @staticmethod
+    def get_not_emailed(profile):
         """
-        Returns all posted timesheets.
+        Returns all posted timesheets for current profile.
         """
-        return self.objects.filter(is_emailed=False)
+        return Timesheet.objects.filter(is_emailed=False)

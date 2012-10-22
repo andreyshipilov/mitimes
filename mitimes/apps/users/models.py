@@ -39,6 +39,7 @@ class ContactEmail(models.Model):
         return self.email
 
 class Contact(models.Model):
+    profile = models.ForeignKey("Profile",)
     is_active = models.BooleanField(default=True,)
     charge_rate = models.ForeignKey(ChargeRate,)
     default_name = models.CharField(max_length=200,)
@@ -51,6 +52,14 @@ class Contact(models.Model):
                 return "%s %s" % (self.first_name, self.last_name)
             return self.first_name
         return self.default_name
+    
+    @staticmethod
+    def get_active(self, profile):
+        return Contact.objects.filter(profile=profile, is_active=True,)
+    
+    @staticmethod
+    def get_inactive(self, profile):
+        return Contact.objects.filter(profile=profile, is_active=False,)
 
 TIME_ZONES = (
     ('Adelaide', 'Adelaide'),

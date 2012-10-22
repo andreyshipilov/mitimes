@@ -7,10 +7,8 @@ from core.models import ActivityCode
 
 admin.site.register(ChargeRate)
 admin.site.register(Client)
-
-# Not really needed in Admin.
-# admin.site.register(ContactPhone)
-# admin.site.register(ContactEmail)
+admin.site.register(ContactPhone)
+admin.site.register(ContactEmail)
 
 class ContactPhoneInline(admin.TabularInline):
     model = ContactPhone
@@ -22,6 +20,10 @@ class ContactAdmin(admin.ModelAdmin):
     inlines = (ContactPhoneInline, ContactEmailInline,)
 admin.site.register(Contact, ContactAdmin)
 
+
+class ContactInline(admin.TabularInline):
+    model = Contact
+    
 class ChargeRateInline(admin.TabularInline):
     model = ChargeRate
 
@@ -29,5 +31,5 @@ class ActivityCodeInline(admin.TabularInline):
     model = ActivityCode
 
 class ProfileAdmin(admin.ModelAdmin):
-    inlines = (ChargeRateInline, ActivityCodeInline,)
+    inlines = (ChargeRateInline, ActivityCodeInline, ContactInline)
 admin.site.register(Profile, ProfileAdmin)

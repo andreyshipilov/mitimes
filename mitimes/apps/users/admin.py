@@ -9,4 +9,10 @@ admin.site.register(Client)
 admin.site.register(ContactPhone)
 admin.site.register(ContactEmail)
 admin.site.register(Contact)
-admin.site.register(Profile)
+
+class ChargeRateInline(admin.TabularInline):
+    model = ChargeRate
+
+class ProfileAdmin(admin.ModelAdmin):
+    inlines = (ChargeRateInline,)
+admin.site.register(Profile, ProfileAdmin)

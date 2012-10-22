@@ -6,6 +6,7 @@ from south.modelsinspector import add_introspection_rules
 
 
 class ChargeRate(models.Model):
+    user = models.ForeignKey("Profile",)
     is_default = models.BooleanField(default=False,)
     description = models.CharField(max_length=100,)
     per_hour = models.DecimalField(max_digits=10, decimal_places=2,)

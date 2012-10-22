@@ -97,6 +97,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+
+    'core',
+    'users',
 )
 
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS

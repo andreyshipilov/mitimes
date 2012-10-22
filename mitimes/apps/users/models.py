@@ -1,4 +1,8 @@
+from django.contrib.auth.models import User
 from django.db import models
+
+from annoying.fields import AutoOneToOneField
+from south.modelsinspector import add_introspection_rules
 
 
 class ChargeRate(models.Model):
@@ -46,3 +50,28 @@ class Contact(models.Model):
                 return "%s %s" % (self.first_name, self.last_name)
             return self.first_name
         return self.default_name
+
+TIME_ZONES = (
+    ('Adelaide', 'Adelaide'),
+    ('Melbourne', 'Melbourne'),
+    ('Lord_Howe', 'Lord Howe'),
+    ('Perth', 'Perth'),
+    ('Currie', 'Currie'),
+    ('Broken_Hill', 'Broken Hill'),
+    ('Lindeman', 'Lindeman'),
+    ('Sydney', 'Sydney'),
+    ('Eucla', 'Eucla'),
+    ('Darwin', 'Darwin'),
+    ('Brisbane', 'Brisbane'),
+    ('Hobart', 'Hobart'),
+)
+add_introspection_rules([], ["^annoying\.fields\.AutoOneToOneField"])
+
+class Profile(models.Model):
+    user = AutoOneToOneField(User, primary_key=True,)
+    activation_key = models.CharField(max_length=40, blank=True,)
+    time_zone = models.CharField(max_length=50, choices=TIME_ZONES,)
+    organisation = models.CharField(max_length=100, blank=True,)
+
+    def __unicode__(self):
+        return 'Profile for %s' % self.user

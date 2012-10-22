@@ -1,6 +1,6 @@
 from django.db import models
 
-from users.models import Client
+from users.models import Client, Profile
 
 
 class Matter(models.Model):
@@ -29,16 +29,20 @@ class ActivityCode(models.Model):
         return self.description
 
 class Activity(models.Model):
+    user = models.ForeignKey(Profile,)
     type = models.ForeignKey(ActivityType,)
     code = models.ForeignKey(ActivityCode,)
     date_time = models.DateTimeField()
     updated_at = models.DateTimeField(auto_now=True,)
     matter = models.ForeignKey(Matter,)
     units = models.PositiveIntegerField(default=0,)
-    description = models.CharField(max_length=200,)
+    description = models.CharField(max_length=200, blank=True,)
 
     class Meta:
         verbose_name_plural = 'activities'
 
     def __unicode__(self):
-        return self.description
+        if self.description:
+            return "%s: %s (%s)" % (self.type, self.description,
+                                    self.matter.key)
+        return "%s: %s (%s)" % (self.type, self.code, self.matter)

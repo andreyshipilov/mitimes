@@ -91,4 +91,4 @@ class Timesheet(models.Model):
         """
         Returns all posted timesheets for current profile.
         """
-        return Timesheet.objects.filter(is_emailed=False)
+        return Timesheet.objects.filter(profile=profile, is_emailed=False)

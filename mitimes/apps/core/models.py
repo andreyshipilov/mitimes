@@ -18,6 +18,7 @@ class ActivityType(models.Model):
         return self.title
 
 class ActivityCode(models.Model):
+    profile = models.ForeignKey(Profile,)
     description = models.CharField(max_length=100,)
     is_default_for_call_to = models.BooleanField(default=False,)
     is_default_for_call_from = models.BooleanField(default=False,)
@@ -29,7 +30,7 @@ class ActivityCode(models.Model):
         return self.description
 
 class Activity(models.Model):
-    user = models.ForeignKey(Profile,)
+    profile = models.ForeignKey(Profile,)
     type = models.ForeignKey(ActivityType,)
     code = models.ForeignKey(ActivityCode,)
     date_time = models.DateTimeField()

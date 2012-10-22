@@ -54,11 +54,11 @@ class Contact(models.Model):
         return self.default_name
     
     @staticmethod
-    def get_active(self, profile):
+    def get_active(profile):
         return Contact.objects.filter(profile=profile, is_active=True,)
     
     @staticmethod
-    def get_inactive(self, profile):
+    def get_inactive(profile):
         return Contact.objects.filter(profile=profile, is_active=False,)
 
 TIME_ZONES = (

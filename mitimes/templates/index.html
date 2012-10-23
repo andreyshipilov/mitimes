@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <title></title>
+        <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                $.ajax({
+                    url: '/api/v1/client/',
+                    type: 'post',
+                    data: JSON.stringify({
+
+                    }),
+                    processData:  false,
+                    dataType: "json",
+                    contentType: 'application/json',
+                    beforeSend: function(jqXHR, settings) {
+                        jqXHR.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
+                    },
+                    success: function(data, textStatus, jqXHR) {
+                        console.log(data);
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        {% csrf_token %}
+    </body>
+</html>

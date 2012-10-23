@@ -29,14 +29,14 @@ class Client(models.Model):
         return "%s %s" % (self.first_name, self.last_name)
 
 class ContactPhone(models.Model):
-    contact = models.ForeignKey("Contact",)
+    contact = models.ForeignKey("Contact", related_name='phones')
     phone = models.CharField(max_length=20,)
 
     def __unicode__(self):
         return self.phone
 
 class ContactEmail(models.Model):
-    contact = models.ForeignKey("Contact",)
+    contact = models.ForeignKey("Contact", related_name='emails')
     email = models.EmailField(max_length=300,)
 
     def __unicode__(self):
@@ -58,18 +58,18 @@ class Contact(models.Model):
         return self.default_name
     
     @staticmethod
-    def get_active(profile):
+    def get_active_for_user(user):
         """
-        Returns all active contacts for profile.
+        Returns all active contacts for user.
         """
-        return Contact.objects.filter(profile=profile, is_active=True,)
+        return Contact.objects.filter(profile__user=user, is_active=True,)
     
     @staticmethod
-    def get_inactive(profile):
+    def get_inactive_for_user(user):
         """
-        Returns all inactive contacts for profile.
+        Returns all inactive contacts for user.
         """
-        return Contact.objects.filter(profile=profile, is_active=False,)
+        return Contact.objects.filter(profile__user=user, is_active=False,)
 
 TIME_ZONES = (
     ('Adelaide', 'Adelaide'),

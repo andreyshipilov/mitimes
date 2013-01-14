@@ -128,9 +128,9 @@ def update_changed_requirements():
                     if not set(">=<") & set(req):
                         # PyPI requirement without version.
                         break
-            else:
-                # All requirements are pinned.
-                return
+        else:
+            # All requirements are pinned.
+            return
         pip("-r %s/%s" % (env.proj_path, env.reqs_path))
 
 

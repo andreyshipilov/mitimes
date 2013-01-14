@@ -1,4 +1,4 @@
 django >= 1.4
 django-annoying
 South
-contextIO
+https://github.com/contextio/Python-ContextIO/archive/master.zip

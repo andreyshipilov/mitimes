@@ -246,7 +246,7 @@ def pip(packages):
     Installs one or more Python packages within the virtual environment.
     """
     with virtualenv():
-        return sudo("pip install %s" % packages)
+        return sudo("pip install --download-cache ~/.pip-cache %s" % packages)
 
 
 def postgres(command):

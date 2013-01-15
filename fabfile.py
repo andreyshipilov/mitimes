@@ -292,8 +292,6 @@ def python(code, show=True):
     setup = "import os; os.environ[\'DJANGO_SETTINGS_MODULE\']=\'"+env.proj_name+".settings\';"
     with project():
         return run('python -c "%s%s"' % (setup, code), show=False)
-        if show:
-            print_command(code)
 
 
 def static():

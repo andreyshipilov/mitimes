@@ -44,7 +44,7 @@ env.manage = "%s/bin/python %s/project/manage.py" % (env.venv_path,
                                                      env.venv_path)
 env.live_host = conf.get("LIVE_HOSTNAME", env.hosts[0] if env.hosts else None)
 env.repo_url = conf.get("REPO_URL", None)
-env.reqs_path = conf.get("REQUIREMENTS_PATH", None)
+env.reqs_path = conf.get("REQUIREMENTS_PATH", 'requires.txt')
 env.gunicorn_port = conf.get("GUNICORN_PORT", 8000)
 env.locale = conf.get("LOCALE", "en_US.UTF-8")
 
@@ -128,9 +128,9 @@ def update_changed_requirements():
                     if not set(">=<") & set(req):
                         # PyPI requirement without version.
                         break
-            else:
-                # All requirements are pinned.
-                return
+        else:
+            # All requirements are pinned.
+            return
         pip("-r %s/%s" % (env.proj_path, env.reqs_path))
 
 
@@ -246,7 +246,7 @@ def pip(packages):
     Installs one or more Python packages within the virtual environment.
     """
     with virtualenv():
-        return sudo("pip install %s" % packages)
+        return sudo("pip install --download-cache ~/.pip-cache %s" % packages)
 
 
 def postgres(command):
@@ -289,11 +289,9 @@ def python(code, show=True):
     """
     Runs Python code in the project's virtual environment, with Django loaded.
     """
-    setup = "import os; os.environ[\'DJANGO_SETTINGS_MODULE\']=\'settings\';"
+    setup = "import os; os.environ[\'DJANGO_SETTINGS_MODULE\']=\'"+env.proj_name+".settings\';"
     with project():
         return run('python -c "%s%s"' % (setup, code), show=False)
-        if show:
-            print_command(code)
 
 
 def static():
@@ -392,9 +390,10 @@ def create():
     with project():
         if env.reqs_path:
             pip("-r %s/%s" % (env.proj_path, env.reqs_path))
-        pip("gunicorn setproctitle south psycopg2 "
+        pip("gunicorn setproctitle psycopg2 "
             "django-compressor python-memcached")
-        manage("createdb --noinput")
+        manage("syncdb --noinput")
+        manage("migrate")
         python("from django.conf import settings;"
                "from django.contrib.sites.models import Site;"
                "site, _ = Site.objects.get_or_create(id=settings.SITE_ID);"
@@ -469,6 +468,8 @@ def deploy():
         upload_template_and_reload(name)
     with project():
         backup("last.db")
+        if not exists(static()):
+            run("mkdir -p %s" % static())
         run("tar -cf last.tar %s" % static())
         git = env.repo_url.startswith("git")
         run("%s > last.commit" % "git rev-parse HEAD" if git else "hg id -i")

@@ -1,4 +1,5 @@
 django >= 1.4
 django-annoying
 South
-contextIO
+https://github.com/toastdriven/django-tastypie/archive/master.zip
+https://github.com/contextio/contextIO2/archive/master.zip
